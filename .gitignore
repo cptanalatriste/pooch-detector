@@ -5,3 +5,5 @@
 .idea/pooch-detector.iml
 .idea/vcs.xml
 .ipynb_checkpoints/dog_app-checkpoint.ipynb
+/dogImages/
+/lfw/
