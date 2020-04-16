@@ -2,6 +2,7 @@ import unittest
 import torchvision.models as models
 
 import toolbox
+import vgg_utils
 
 
 class TestToolbox(unittest.TestCase):
@@ -17,8 +18,8 @@ class TestToolbox(unittest.TestCase):
         dog_image = "dogImages/train/001.Affenpinscher/Affenpinscher_00001.jpg"
         vgg16_model = models.vgg16(pretrained=True)
 
-        _, label = toolbox.apply_classification_model(classification_model=vgg16_model,
-                                                      preprocess_function=toolbox.preprocess_for_vgg16,
-                                                      image_path=dog_image)
-
-        self.assertEqual(label, "affenpinscher")
+        index = toolbox.apply_classification_model(classification_model=vgg16_model,
+                                                   preprocess_function=vgg_utils.preprocess_for_vgg16,
+                                                   image_path=dog_image)
+        self.assertIsInstance(index, int)
+        self.assertEqual(vgg_utils.get_imagenet_class(index), "affenpinscher")
