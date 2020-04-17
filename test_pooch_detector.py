@@ -1,4 +1,5 @@
 import copy
+import os
 import unittest
 
 from torch import nn, optim
@@ -55,3 +56,25 @@ class TestPoochDetector(unittest.TestCase):
 
         self.assertIsInstance(loss_value, float)
         self.assertTrue(toolbox.compare_model_parameters(parameters_before_validation, parameters_after_validation))
+
+    def test_save_if_improved(self):
+        self.model.current_val_loss = None
+        first_epoch_loss = 1.0
+        file_path = "test.pth"
+
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
+        self.model.save_if_improved(epoch_val_loss=first_epoch_loss, file_path=file_path)
+
+        self.assertEqual(first_epoch_loss, self.model.current_val_loss)
+        self.assertTrue(os.path.exists(file_path))
+
+        second_epoch_loss = 10.0
+        new_test_path = "test_new.pth"
+        if os.path.exists(new_test_path):
+            os.remove(new_test_path)
+
+        self.model.save_if_improved(epoch_val_loss=second_epoch_loss, file_path=new_test_path)
+        self.assertEqual(first_epoch_loss, self.model.current_val_loss)
+        self.assertFalse(os.path.exists(new_test_path))

@@ -23,6 +23,8 @@ class Net(nn.Module):
         self.linear2_layer = nn.Linear(in_features=linear1_out_features, out_features=linear2_out_features)
         self.linear3_layer = nn.Linear(in_features=linear2_out_features, out_features=num_classes)
 
+        self.current_val_loss = None
+
     def forward(self, x):
         x = self.maxpool_layer(F.relu(self.conv1_layer(x)))
         x = self.maxpool_layer(F.relu(self.conv2_layer(x)))
@@ -49,6 +51,13 @@ class Net(nn.Module):
             loss = criterion(network_output, labels)
 
         return loss.item()
+
+    def save_if_improved(self, epoch_val_loss, file_path):
+        if self.current_val_loss is None or self.current_val_loss > epoch_val_loss:
+
+            print("Saving model at ", file_path)
+            torch.save(self.state_dict(), file_path)
+            self.current_val_loss = epoch_val_loss
 
 
 def reset_gradients(optimiser):
