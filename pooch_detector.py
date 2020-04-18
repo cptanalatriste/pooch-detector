@@ -42,6 +42,9 @@ class TransferLearningNet:
     def train(self):
         self.model.train()
 
+    def eval(self):
+        self.model.eval()
+
     def load_model(self, file_path):
         toolbox.load_model(self.model, file_path)
 
