@@ -5,6 +5,8 @@ from torchvision.transforms import transforms
 
 image_size = 224
 num_channels = 3
+normalization_means = [0.485, 0.456, 0.406]
+normalization_stds = [0.229, 0.224, 0.225]
 
 
 def get_imagenet_class(index):
@@ -16,12 +18,12 @@ def get_imagenet_class(index):
     return label
 
 
-def get_vgg16_transformation():
+def get_input_transform():
     return transforms.Compose([
-        transforms.RandomResizedCrop(image_size),
+        transforms.CenterCrop(image_size),
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                             std=[0.229, 0.224, 0.225])
+        transforms.Normalize(mean=normalization_means,
+                             std=normalization_stds)
     ])
 
 
@@ -29,5 +31,5 @@ def preprocess_for_vgg16(image_path):
     image_file = Image.open(image_path)
     num_images = 1
 
-    transformation = get_vgg16_transformation()
+    transformation = get_input_transform()
     return transformation(image_file).view(num_images, num_channels, image_size, image_size)

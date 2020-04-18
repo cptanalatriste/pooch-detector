@@ -24,9 +24,9 @@ def apply_classification_model(classification_model,
     return index
 
 
-def get_data_loader(root_folder, transform, batch_size):
+def get_data_loader(root_folder, transform, batch_size, num_workers=4):
     dataset_folder = datasets.ImageFolder(root=root_folder, transform=transform)
-    return torch.utils.data.DataLoader(dataset_folder, shuffle=True, batch_size=batch_size)
+    return torch.utils.data.DataLoader(dataset_folder, shuffle=True, batch_size=batch_size, num_workers=num_workers)
 
 
 def compare_model_parameters(parameters, more_parameters):
