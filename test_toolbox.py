@@ -24,3 +24,10 @@ class TestToolbox(unittest.TestCase):
                                                    image_path=dog_image)
         self.assertIsInstance(index, int)
         self.assertEqual(vgg_utils.get_imagenet_class(index), "affenpinscher")
+
+    def test_get_classname_map(self):
+        class_names = toolbox.get_class_names("dogImages/train")
+
+        self.assertEqual("Affenpinscher", class_names[0])
+        self.assertEqual("Akita", class_names[3])
+        self.assertEqual("American foxhound", class_names[6])

@@ -26,6 +26,11 @@ def apply_classification_model(classification_model,
     return index
 
 
+def get_class_names(root_folder):
+    dataset_folder = datasets.ImageFolder(root=root_folder)
+    return [raw_classname[4:].replace("_", " ") for raw_classname in dataset_folder.classes]
+
+
 def get_data_loader(root_folder, transform, batch_size, num_workers=0):
     dataset_folder = datasets.ImageFolder(root=root_folder, transform=transform)
     return torch.utils.data.DataLoader(dataset_folder, shuffle=True, batch_size=batch_size, num_workers=num_workers)
@@ -85,6 +90,11 @@ def update_model_parameters(model, features, labels, criterion, optimiser):
 
 def load_model(model, file_path):
     if os.path.exists(file_path):
+        if torch.cuda.is_available():
+            map_location = torch.device('cuda')
+        else:
+            map_location = torch.device('cpu')
+
         print("Loading parameters from ", file_path)
-        state_dict = torch.load(file_path)
+        state_dict = torch.load(file_path, map_location=map_location)
         model.load_state_dict(state_dict)
