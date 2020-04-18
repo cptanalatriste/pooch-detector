@@ -11,6 +11,7 @@ class TransferLearningNet:
 
     def __init__(self, num_classes):
         self.model = models.vgg16(pretrained=True)
+        self.model.current_val_loss = None
 
         for parameter in self.model.parameters():
             parameter.requires_grad = False
