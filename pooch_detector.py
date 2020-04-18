@@ -6,6 +6,7 @@ from torchvision.transforms import transforms
 import toolbox
 import vgg_utils
 
+
 class TransferLearningNet:
 
     def __init__(self, num_classes):
