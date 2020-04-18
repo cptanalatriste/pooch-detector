@@ -17,7 +17,6 @@ jedi==0.16.0
 Jinja2==2.11.1
 jsonschema==3.2.0
 jupyter==1.0.0
-jupyter-client==6.1.2
 jupyter-console==6.1.0
 jupyter-core==4.6.3
 kiwisolver==1.0.1
