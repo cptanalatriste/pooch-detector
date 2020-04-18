@@ -1,3 +1,5 @@
+import os
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -52,9 +54,14 @@ class Net(nn.Module):
 
         return loss.item()
 
+    def load_model(self, file_path):
+        if os.path.exists(file_path):
+            print("Loading parameters from ", file_path)
+            state_dict = torch.load(file_path)
+            self.load_state_dict(state_dict)
+
     def save_if_improved(self, epoch_val_loss, file_path):
         if self.current_val_loss is None or self.current_val_loss > epoch_val_loss:
-
             print("Saving model at ", file_path)
             torch.save(self.state_dict(), file_path)
             self.current_val_loss = epoch_val_loss

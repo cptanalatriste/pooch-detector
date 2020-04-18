@@ -7,3 +7,5 @@
 .ipynb_checkpoints/dog_app-checkpoint.ipynb
 /dogImages/
 /lfw/
+aws-deep-learning-key.pem
+test.pth
