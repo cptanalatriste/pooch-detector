@@ -1,3 +1,5 @@
+import os
+
 import torch
 import torchvision.datasets as datasets
 
@@ -24,7 +26,7 @@ def apply_classification_model(classification_model,
     return index
 
 
-def get_data_loader(root_folder, transform, batch_size, num_workers=4):
+def get_data_loader(root_folder, transform, batch_size, num_workers=0):
     dataset_folder = datasets.ImageFolder(root=root_folder, transform=transform)
     return torch.utils.data.DataLoader(dataset_folder, shuffle=True, batch_size=batch_size, num_workers=num_workers)
 
@@ -54,3 +56,35 @@ def compare_model_parameters(parameters, more_parameters):
                 return False
     if models_differ == 0:
         return True
+
+
+def calculate_loss(model, criterion, features, labels):
+    with torch.no_grad():
+        network_output = model.forward(features)
+        loss = criterion(network_output, labels)
+
+    return loss.item()
+
+
+def save_if_improved(model, epoch_val_loss, file_path):
+    if model.current_val_loss is None or model.current_val_loss > epoch_val_loss:
+        print("Saving model at ", file_path)
+        torch.save(model.state_dict(), file_path)
+        model.current_val_loss = epoch_val_loss
+
+
+def update_model_parameters(model, features, labels, criterion, optimiser):
+    network_output = model.forward(features)
+
+    loss = criterion(network_output, labels)
+    loss.backward()
+    optimiser.step()
+
+    return loss.item()
+
+
+def load_model(model, file_path):
+    if os.path.exists(file_path):
+        print("Loading parameters from ", file_path)
+        state_dict = torch.load(file_path)
+        model.load_state_dict(state_dict)

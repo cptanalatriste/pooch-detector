@@ -1,13 +1,10 @@
-import os
-
-import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import models
 from torchvision.transforms import transforms
 
+import toolbox
 import vgg_utils
-
 
 class TransferLearningNet:
 
@@ -38,8 +35,24 @@ class TransferLearningNet:
     def state_dict(self):
         return self.model.state_dict()
 
+    def cuda(self):
+        self.model.cuda()
+        return self
+
+    def train(self):
+        self.model.train()
+
+    def load_model(self, file_path):
+        toolbox.load_model(self.model, file_path)
+
+    def save_if_improved(self, epoch_val_loss, file_path):
+        toolbox.save_if_improved(self.model, epoch_val_loss, file_path)
+
+    def calculate_loss(self, criterion, features, labels):
+        return toolbox.calculate_loss(self.model, criterion, features, labels)
+
     def update_model_parameters(self, features, labels, criterion, optimiser):
-        return update_model_parameters(self.model, features, labels, criterion, optimiser)
+        return toolbox.update_model_parameters(self.model, features, labels, criterion, optimiser)
 
 
 class Net(nn.Module):
@@ -76,40 +89,20 @@ class Net(nn.Module):
         return x
 
     def update_model_parameters(self, features, labels, criterion, optimiser):
-        return update_model_parameters(self, features, labels, criterion, optimiser)
-
-    def calculate_loss(self, criterion, features, labels):
-        with torch.no_grad():
-            network_output = self.forward(features)
-            loss = criterion(network_output, labels)
-
-        return loss.item()
+        return toolbox.update_model_parameters(self, features, labels, criterion, optimiser)
 
     def load_model(self, file_path):
-        if os.path.exists(file_path):
-            print("Loading parameters from ", file_path)
-            state_dict = torch.load(file_path)
-            self.load_state_dict(state_dict)
+        toolbox.load_model(self, file_path)
 
     def save_if_improved(self, epoch_val_loss, file_path):
-        if self.current_val_loss is None or self.current_val_loss > epoch_val_loss:
-            print("Saving model at ", file_path)
-            torch.save(self.state_dict(), file_path)
-            self.current_val_loss = epoch_val_loss
+        toolbox.save_if_improved(self, epoch_val_loss, file_path)
+
+    def calculate_loss(self, criterion, features, labels):
+        return toolbox.calculate_loss(self, criterion, features, labels)
 
 
 def reset_gradients(optimiser):
     optimiser.zero_grad()
-
-
-def update_model_parameters(model, features, labels, criterion, optimiser):
-    network_output = model.forward(features)
-
-    loss = criterion(network_output, labels)
-    loss.backward()
-    optimiser.step()
-
-    return loss.item()
 
 
 def get_training_transform():
