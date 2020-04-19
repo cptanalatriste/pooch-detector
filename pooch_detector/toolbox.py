@@ -14,17 +14,10 @@ def apply_classification_model(classification_model,
                                image_path):
     preprocessed_image = preprocess_function(image_path)
     if torch.cuda.is_available():
-
-        print("CUDA is available! moving model and tensors" )
-        classification_model.cuda()
-        preprocessed_image.cuda()
-    else:
-        print("CUDA not available")
+        preprocessed_image = preprocessed_image.cuda()
 
     with torch.no_grad():
         classification_model.eval()
-
-        print("preprocessed_image.type()", preprocessed_image.type())
         log_probabilities = classification_model.forward(preprocessed_image)
 
     probabilities = torch.exp(log_probabilities)
