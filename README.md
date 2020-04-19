@@ -2,7 +2,7 @@
 
 A neural network for detecting dog breeds. 
 It uses a transfer learning approach based on the [VGG-16 model 
-architecture]](https://arxiv.org/abs/1409.1556).
+architecture](https://arxiv.org/abs/1409.1556).
 
 
 ## Getting started
