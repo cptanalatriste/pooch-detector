@@ -14,6 +14,7 @@ def apply_classification_model(classification_model,
                                image_path):
     preprocessed_image = preprocess_function(image_path)
     if torch.cuda.is_available():
+        classification_model.cuda()
         preprocessed_image.cuda()
 
     with torch.no_grad():
