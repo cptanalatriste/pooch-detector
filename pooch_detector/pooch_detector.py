@@ -3,8 +3,7 @@ import torch.nn.functional as F
 from torchvision import models
 from torchvision.transforms import transforms
 
-import toolbox
-import vgg_utils
+from pooch_detector import vgg_utils, toolbox
 
 
 class TransferLearningNet:

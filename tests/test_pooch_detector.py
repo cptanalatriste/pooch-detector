@@ -4,10 +4,7 @@ import unittest
 
 from torch import nn, optim
 
-import pooch_detector
-import toolbox
-import vgg_utils
-from pooch_detector import Net
+from .context import pooch_detector
 
 
 class TestPoochDetector(unittest.TestCase):
@@ -17,14 +14,15 @@ class TestPoochDetector(unittest.TestCase):
 
         input_channels = 3
         self.num_classes = 133
-        self.scratch_net = Net(input_channels=input_channels, num_classes=self.num_classes)
+        self.scratch_net = pooch_detector.Net(input_channels=input_channels, num_classes=self.num_classes)
         self.transfer_net = pooch_detector.TransferLearningNet(num_classes=self.num_classes)
 
         self.criterion = nn.CrossEntropyLoss()
 
         training_transform = pooch_detector.get_training_transform()
-        self.train_dataloader = toolbox.get_data_loader(root_folder="dogImages/train",
-                                                        transform=training_transform, batch_size=self.batch_size)
+        self.train_dataloader = pooch_detector.toolbox.get_data_loader(root_folder="dogImages/train",
+                                                                       transform=training_transform,
+                                                                       batch_size=self.batch_size)
 
     def test_transfer_net_structure(self):
 
@@ -52,7 +50,8 @@ class TestPoochDetector(unittest.TestCase):
         parameters_after_training = copy.deepcopy(self.transfer_net.state_dict())
 
         self.assertIsInstance(loss_value, float)
-        self.assertFalse(toolbox.compare_model_parameters(parameters_before_training, parameters_after_training))
+        self.assertFalse(
+            pooch_detector.toolbox.compare_model_parameters(parameters_before_training, parameters_after_training))
 
     def test_scratch_net_training(self):
 
@@ -72,13 +71,15 @@ class TestPoochDetector(unittest.TestCase):
         parameters_after_training = copy.deepcopy(self.scratch_net.state_dict())
 
         self.assertIsInstance(loss_value, float)
-        self.assertFalse(toolbox.compare_model_parameters(parameters_before_training, parameters_after_training))
+        self.assertFalse(
+            pooch_detector.toolbox.compare_model_parameters(parameters_before_training, parameters_after_training))
 
     def test_smoke_validation(self):
 
-        testing_transform = vgg_utils.get_input_transform()
-        valid_dataloader = toolbox.get_data_loader(root_folder="dogImages/valid",
-                                                   transform=testing_transform, batch_size=self.batch_size)
+        testing_transform = pooch_detector.vgg_utils.get_input_transform()
+        valid_dataloader = pooch_detector.toolbox.get_data_loader(root_folder="dogImages/valid",
+                                                                  transform=testing_transform,
+                                                                  batch_size=self.batch_size)
         parameters_before_validation = copy.deepcopy(self.scratch_net.state_dict())
         data_iterator = iter(valid_dataloader)
         images, valid_labels = data_iterator.next()
@@ -88,12 +89,13 @@ class TestPoochDetector(unittest.TestCase):
         parameters_after_validation = copy.deepcopy(self.scratch_net.state_dict())
 
         self.assertIsInstance(loss_value, float)
-        self.assertTrue(toolbox.compare_model_parameters(parameters_before_validation, parameters_after_validation))
+        self.assertTrue(
+            pooch_detector.toolbox.compare_model_parameters(parameters_before_validation, parameters_after_validation))
 
     def test_save_if_improved(self):
         self.scratch_net.current_val_loss = None
         first_epoch_loss = 1.0
-        file_path = "test.pth"
+        file_path = "../test.pth"
 
         if os.path.exists(file_path):
             os.remove(file_path)
