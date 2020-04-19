@@ -13,6 +13,8 @@ def apply_classification_model(classification_model,
                                preprocess_function,
                                image_path):
     preprocessed_image = preprocess_function(image_path)
+    if torch.cuda.is_available():
+        preprocessed_image.cuda()
 
     with torch.no_grad():
         classification_model.eval()
