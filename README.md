@@ -1,6 +1,6 @@
 # pooch-detector
 
-![pooch-detector in action](https://octodex.github.com/images/yaktocat.png)
+![pooch-detector in action](https://github.com/cptanalatriste/pooch-detector/blob/master/img/pooch_detected.png?raw=true)
 
 A neural network for detecting dog breeds. 
 It uses a transfer learning approach based on the [VGG-16 model 
