@@ -25,7 +25,8 @@ class TestToolbox(unittest.TestCase):
         self.assertEqual(pooch_detector.vgg_utils.get_imagenet_class(index), "affenpinscher")
 
     def test_get_classname_map(self):
-        class_names = pooch_detector.toolbox.get_class_names("dogImages/train")
+        root_folder = "dogImages/train"
+        class_names = pooch_detector.toolbox.get_class_names(root_folder)
 
         self.assertEqual("Affenpinscher", class_names[0])
         self.assertEqual("Akita", class_names[3])
