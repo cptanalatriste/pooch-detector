@@ -19,6 +19,5 @@ And the [human dataset](http://vis-www.cs.umass.edu/lfw/lfw.tgz) if you want to 
 You can also [download the state dictionaries of the pre-trained networks](https://drive.google.com/open?id=16iCEDprKa0t4PfwaE50htfxEm9PY8tGv), if you prefer.
 
 ## Instructions
-To take a look into the training process, you can take a look at the `dog_app.ipynb`
-jupyter notebook.
+To explore the training process, you can take a look at the `dog_app.ipynb` jupyter notebook.
 The network code is contained in the `pooch_detector` module.
