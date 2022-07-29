@@ -20,7 +20,7 @@ jupyter==1.0.0
 jupyter-core==4.6.3
 kiwisolver==1.0.1
 MarkupSafe==1.1.1
-mistune==0.8.4
+mistune==2.0.3
 nbconvert==5.6.1
 olefile==0.46
 pandocfilters==1.4.2
