@@ -21,7 +21,7 @@ jupyter-core==4.6.3
 kiwisolver==1.0.1
 MarkupSafe==1.1.1
 mistune==0.8.4
-nbconvert==5.6.1
+nbconvert==6.3.0
 olefile==0.46
 pandocfilters==1.4.2
 parso==0.6.2
